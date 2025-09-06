@@ -1,15 +1,25 @@
 import classNames from "classnames";
 import { FC, HTMLAttributes, ReactNode } from "react";
 
-export const Container: FC<
-  {
-    children: ReactNode;
-    className?: string;
-  } & HTMLAttributes<HTMLElement>
-> = ({ children, className, ...rest }) => {
+type Props = {
+  children: ReactNode;
+  className?: string;
+  withNavOffset?: boolean;
+} & HTMLAttributes<HTMLElement>;
+
+export const Container: FC<Props> = ({
+  children,
+  className,
+  withNavOffset = true,
+  ...rest
+}) => {
   return (
     <section
-      className={classNames("container mx-auto pt-40 pb-20 px-4", className)}
+      className={classNames(
+        "container mx-auto px-4 pb-20",
+        withNavOffset && "pt-[var(--nav-h)] min-h-[calc(100dvh-var(--nav-h))]",
+        className,
+      )}
       {...rest}
     >
       {children}

@@ -14,3 +14,15 @@
   src: url("/fonts/Luxurious_Script/LuxuriousScript-Regular.ttf")
     format("truetype");
 }
+
+/* globals.css */
+:root {
+  --nav-h: 80px;
+  --cushion: 2px;
+}
+@media (min-width: 1024px) {
+  :root {
+    --nav-h: 96px;
+    --cushion: 68px;
+  } /* lg */
+}

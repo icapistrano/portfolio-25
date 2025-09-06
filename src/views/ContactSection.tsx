@@ -32,7 +32,7 @@ const socials = [
   },
 ];
 
-export const ContactPage = () => {
+export const ContactSection = () => {
   return (
     <div className="h-screen flex flex-col justify-between">
       <Container

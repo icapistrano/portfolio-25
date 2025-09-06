@@ -8,6 +8,7 @@ import {
 import classNames from "classnames";
 import { Button } from "./Button";
 import { IconArrowRight } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
 
 export const AnimatedProjectItem: FC<{
   side: "left" | "right";
@@ -48,7 +49,10 @@ export const ProjectThumbnail: FC<{
   desc: string;
   techStack: string[];
   isActive?: boolean;
-}> = ({ title, techStack, image, desc, isActive = true }) => {
+  url: string;
+}> = ({ title, techStack, image, desc, isActive = true, url }) => {
+  const navigate = useNavigate();
+
   return (
     <div
       className={classNames(
@@ -75,7 +79,7 @@ export const ProjectThumbnail: FC<{
             ))}
           </ul>
 
-          <Button>
+          <Button onClick={() => navigate(url)}>
             <div className="flex flex-row gap-1 items-center py-1 px-3">
               <h3 className="text-sm">View work</h3>
               <IconArrowRight size={18} />

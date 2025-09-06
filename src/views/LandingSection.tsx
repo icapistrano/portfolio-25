@@ -1,14 +1,14 @@
 import { Container } from "../components/Container";
 import BlobNoiseScene from "../components/r3f/Blob";
 
-export const LandingPage: React.FC = () => {
+export const LandingSection: React.FC = () => {
   return (
     <div id="index" className="h-screen flex flex-col justify-end">
       <div className="absolute h-full w-full left-0 top-0 opacity-100 z-30">
         <BlobNoiseScene />
       </div>
       <Container>
-        <div className="flex flex-col px-40">
+        <div className="flex flex-col px-40 h-full justify-end">
           <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-center font-primary text-9xl text-primary/90 z-20">
             <h2 className="text-center text-9xl font-primary">
               Immanuel <span className="font-accent text-[190px] mr-2">C</span>

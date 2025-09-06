@@ -3,12 +3,13 @@ import { TimelineWithWaypoints, Waypoint } from "./Timeline";
 import classNames from "classnames";
 import { AnimatedProjectItem, ProjectThumbnail } from "./ProjectThumbnail";
 
-type WP = Waypoint & {
+export type WP = Waypoint & {
   title: string;
   desc: string;
   tags: string[];
   side: "left" | "right";
   image: string;
+  link: string;
 };
 
 const ProjectColumn: React.FC<{
@@ -38,6 +39,7 @@ const ProjectColumn: React.FC<{
                 image={wp.image}
                 desc={wp.desc}
                 isActive={true}
+                url={wp.link}
               />
             </AnimatedProjectItem>
           </div>

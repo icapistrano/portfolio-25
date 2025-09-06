@@ -1,31 +1,26 @@
 import { Navbar } from "./components/Navbar";
-import { LandingPage } from "./views/LandingPage";
-import { AboutPage } from "./views/AboutPage";
-import { WorkPage } from "./views/WorkPage";
-import { ContactPage } from "./views/ContactPage";
-import pattern from "../src/assets/images/gridPattern.png";
+import { Outlet, Route, Routes } from "react-router-dom";
+import { PageSideborder } from "./components/PageSideborder";
+import { IndexPage } from "./views/IndexPage";
 
-function App() {
+const AppLayout = () => {
   return (
-    <div className="h-vh w-full text-primary font-primary text-lg font-light overflow-hidden bg-opacity-10">
+    <div className="h-vh w-full text-primary font-primary text-lg font-light bg-opacity-10">
       <Navbar />
-      <LandingPage />
-      <WorkPage />
-      <AboutPage />
-      <ContactPage />
-      <PageSideBorder />
-    </div>
-  );
-}
-
-// PageSideBorder.tsx
-export const PageSideBorder: React.FC<{}> = () => {
-  return (
-    <div className="pointer-events-none fixed inset-0">
-      {/* This inner container matches your page width & padding */}
-      <div className="h-full container mx-auto border-grey/80 px-4 border-x border-dashed" />
+      <PageSideborder />
+      <Outlet />
     </div>
   );
 };
+
+function App() {
+  return (
+    <Routes>
+      <Route element={<AppLayout />}>
+        <Route index element={<IndexPage />} />
+      </Route>
+    </Routes>
+  );
+}
 
 export default App;
