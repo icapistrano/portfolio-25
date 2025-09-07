@@ -1,4 +1,4 @@
-import { FC, ReactNode, useRef } from "react";
+import { FC, useRef } from "react";
 import {
   motion,
   useScroll,
@@ -73,7 +73,10 @@ export const ProjectThumbnail: FC<{
         <div className="flex justify-between items-end">
           <ul className="flex gap-2 text-xs mt-6">
             {techStack.map((tag) => (
-              <li className="border border-grey rounded-full px-4 py-1 font-regular text-primary/50">
+              <li
+                key={`${title}-${tag}`}
+                className="border border-grey rounded-full px-4 py-1 font-regular text-primary/50"
+              >
                 {tag}
               </li>
             ))}

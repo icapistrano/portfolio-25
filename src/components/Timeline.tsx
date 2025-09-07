@@ -5,7 +5,7 @@ import {
   useTransform,
   useMotionValueEvent,
 } from "framer-motion";
-import React, { FC, useMemo, useRef, useState } from "react";
+import { FC, useMemo, useRef, useState } from "react";
 
 export type Waypoint = {
   id: string;

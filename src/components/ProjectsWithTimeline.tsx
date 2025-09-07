@@ -18,7 +18,6 @@ const ProjectColumn: React.FC<{
 }> = ({ waypoints, activeWaypoint }) => {
   return (
     <div className="relative h-full w-full">
-      {/* absolutely position each card by pos */}
       {waypoints.map((wp) => {
         return (
           <div
@@ -77,7 +76,6 @@ export function ProjectsWithCenterTimeline({ waypoints }: { waypoints: WP[] }) {
             if (_activeWaypoint) {
               setActiveProjectId(_activeWaypoint.id);
             }
-            console.log(e);
           }}
         />
       </div>
