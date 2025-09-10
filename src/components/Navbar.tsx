@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { IconArrowUpRight, IconMenu2, IconX } from "@tabler/icons-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "./Button";
@@ -17,7 +17,6 @@ export const Navbar = () => {
   const [indexSection, setIndexSection] = useState<SectionId | undefined>(
     "index",
   );
-  const behaviorRef = useRef<ScrollBehavior>("smooth");
 
   const scrollToSection = (id: SectionId) => {
     if (pathname !== "/") {
@@ -25,14 +24,13 @@ export const Navbar = () => {
     }
 
     setIndexSection(id);
-    behaviorRef.current = "instant";
   };
 
   useEffect(() => {
     if (pathname !== "/" || indexSection === undefined) return;
 
     const section = document.getElementById(indexSection);
-    section?.scrollIntoView({ behavior: behaviorRef.current });
+    section?.scrollIntoView();
     setIndexSection(undefined);
   }, [indexSection, pathname]);
 

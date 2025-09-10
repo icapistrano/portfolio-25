@@ -203,7 +203,7 @@ export const InteractiveShuffleboardPage = () => {
   }, []);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
+    window.scrollTo({ top: 0 });
   }, []);
 
   return (
