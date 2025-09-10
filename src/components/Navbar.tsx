@@ -32,7 +32,7 @@ export const Navbar = () => {
   }, [indexSection, pathname]);
 
   // ----- Mobile drawer state -----
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="z-50 fixed top-0 w-full py-0 border-b border-grey bg-dark h-[var(--nav-h)]">

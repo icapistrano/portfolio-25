@@ -1,47 +1,8 @@
-import { FC, useRef } from "react";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useReducedMotion,
-} from "framer-motion";
+import { FC } from "react";
 import classNames from "classnames";
 import { Button } from "./Button";
 import { IconArrowRight } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
-
-export const AnimatedProjectItem: FC<{
-  side: "left" | "right";
-  children: React.ReactNode;
-}> = ({ side, children }) => {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const prefersReduced = useReducedMotion();
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["center 100%", "center 70%"],
-  });
-
-  // Scroll-driven
-  const opacity = useTransform(scrollYProgress, [0, 1], [0.5, 1]);
-
-  return (
-    <motion.div
-      ref={ref}
-      style={
-        prefersReduced
-          ? undefined
-          : {
-              opacity,
-            }
-      }
-      transition={{ type: "tween", stiffness: 180, damping: 16, mass: 0.6 }}
-      className="will-change-transform"
-    >
-      {children}
-    </motion.div>
-  );
-};
 
 export const ProjectThumbnail: FC<{
   title: string;
@@ -70,8 +31,8 @@ export const ProjectThumbnail: FC<{
       <div className="flex flex-col">
         <h2 className="font-primary text-xl font-regular mb-1">{title}</h2>
         <p className="font-thin text-md text-primary/50">{desc}</p>
-        <div className="flex justify-between items-end">
-          <ul className="flex gap-2 text-xs mt-6">
+        <div className="flex items-end mt-4 md:mt-0 justify-end md:justify-between">
+          <ul className="flex gap-2 text-xs mt-6 hidden md:flex">
             {techStack.map((tag) => (
               <li
                 key={`${title}-${tag}`}
