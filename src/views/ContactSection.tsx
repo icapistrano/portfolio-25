@@ -4,15 +4,19 @@ export const ContactSection: FC = () => {
   const metadata = [
     {
       label: "LinkedIn",
+      link: "https://www.linkedin.com/in/icapistrano97/",
     },
     {
       label: "Github",
+      link: "https://github.com/icapistrano",
     },
     {
       label: "Instagram",
+      link: "https://www.instagram.com/icapistrano_/",
     },
     {
       label: "icapistrano97@outlook.com",
+      link: "mailto:icapistrano97@outlook.com",
     },
   ];
 
@@ -22,9 +26,9 @@ export const ContactSection: FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
           {/* Column 1: Links */}
           <ul className="flex flex-col md:flex-row md:gap-10 md:items-center gap-1">
-            {metadata.map(({ label }) => (
+            {metadata.map(({ label, link }) => (
               <li key={label} className="hover:cursor-pointer">
-                {label}
+                <a href={link}>{label}</a>
               </li>
             ))}
           </ul>

@@ -43,7 +43,7 @@ export const ProjectThumbnail: FC<{
             ))}
           </ul>
 
-          <Button onClick={() => navigate(url)}>
+          <Button onClick={() => navigate(url)} isDisabled={url.length <= 0}>
             <div className="flex flex-row gap-1 items-center py-1 px-3">
               <h3 className="text-sm">View work</h3>
               <IconArrowRight size={18} />
