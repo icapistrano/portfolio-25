@@ -3,6 +3,7 @@ import { Outlet, Route, Routes } from "react-router-dom";
 import { PageSideborder } from "./components/PageSideborder";
 import { IndexPage } from "./views/IndexPage";
 import { InteractiveShuffleboardPage } from "./views/InteractiveShuffleboardPage";
+import { RobotAirHockeyPage } from "./views/RobotAirHockeyPage";
 
 const AppLayout = () => {
   return (
@@ -22,6 +23,10 @@ function App() {
         <Route
           path="/projects/interactive-shuffleboard"
           element={<InteractiveShuffleboardPage />}
+        />
+        <Route
+          path="/projects/robot-air-hockey"
+          element={<RobotAirHockeyPage />}
         />
       </Route>
     </Routes>

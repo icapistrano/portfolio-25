@@ -8,7 +8,7 @@ export const HighlightTextOnScroll: FC<{
   const ref = useRef<HTMLDivElement | null>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start 85%", "end 50%"],
+    offset: ["start 85%", "end 60%"],
   });
 
   const count = Math.max(paragraphs.length, 1);
@@ -37,13 +37,7 @@ const SequencedWordParagraph: FC<{
   base?: string;
   highlight?: string;
   className?: string;
-}> = ({
-  text,
-  progress,
-  base = "#4A4A4A",
-  highlight = "#F4F4F5",
-  className,
-}) => {
+}> = ({ text, progress, base = "#4A4A4A", highlight = "#F4F4F5" }) => {
   // split but keep spaces
   const tokens = useMemo(() => text.split(/(\s+)/), [text]);
   const wordIdxs = tokens
@@ -52,7 +46,7 @@ const SequencedWordParagraph: FC<{
   const total = Math.max(wordIdxs.length, 1);
 
   return (
-    <p className={className ?? "text-4xl leading-[1.7]"}>
+    <p>
       {tokens.map((t, i) => {
         if (/^\s+$/.test(t)) return <span key={`s-${i}`}>{t}</span>;
 

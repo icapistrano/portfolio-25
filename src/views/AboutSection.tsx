@@ -11,14 +11,14 @@ export const AboutSection = () => {
   return (
     <Container
       id="about"
-      className="text-4xl font-primary font-thin border-t border-grey border-dashed"
+      className="font-primary font-thin border-t border-grey border-dashed mb-16 md:mb-20"
     >
-      <div className="pt-[var(--cushion)]">
+      <div className="pt-[var(--cushion)] lg:mx-40">
         <HighlightTextOnScroll
-          className="flex lg:mx-40 flex-col gap-10"
+          className="flex flex-col gap-10 text-3xl md:text-5xl md:leading-[1.4]"
           paragraphs={[
             `Hello World — I’m Immanuel, a UK-based Frontend Engineer with 6 years of 
-            experience at the intersection of design and technology.I specialise in 
+            experience at the intersection of design and technology. I specialise in 
             creating immersive, interactive experiences with a strong emphasis on 
             UI/UX design and 3D development.`,
             `Over the years, I’ve worked within startups to bridge the gap between
@@ -33,12 +33,12 @@ export const AboutSection = () => {
           ]}
         />
 
-        <div className="lg:mx-40 py-4 border-l-4 border-accent mt-20">
+        <div className="py-4 border-l-4 border-accent mt-10">
           <div className="flex flex-col ml-4 gap-2">
-            <p className="text-accent font-light">TL;DR</p>
-            <ul className="flex flex-col gap-1 mt-2">
+            <p className="text-accent font-light text-3xl">TL;DR</p>
+            <ul className="flex flex-col gap-1 mt-2 text-2xl">
               {summary.map((text) => (
-                <span key={text} className="text-2xl block">
+                <span key={text} className="block">
                   {text}
                 </span>
               ))}

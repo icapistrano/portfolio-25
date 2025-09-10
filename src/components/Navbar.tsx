@@ -3,6 +3,8 @@ import { IconArrowUpRight, IconMenu2, IconX } from "@tabler/icons-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "./Button";
 import classNames from "classnames";
+import { useTopOffsetPx } from "../hooks/useTopOffsetPx";
+import { useActiveSection } from "../hooks/useActiveSection";
 
 const navItems = ["Index", "Work", "About"] as const;
 type NavItem = (typeof navItems)[number]; // "Index" | "Work" | "About"
@@ -12,27 +14,37 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const [indexSection, setIndexSection] = useState<SectionId>("index");
+  const [indexSection, setIndexSection] = useState<SectionId | undefined>(
+    "index",
+  );
   const behaviorRef = useRef<ScrollBehavior>("smooth");
 
-  const scrollToSection = (id: NavItem) => {
+  const scrollToSection = (id: SectionId) => {
     if (pathname !== "/") {
       navigate("/");
     }
 
-    setIndexSection(id.toLowerCase() as SectionId);
-    behaviorRef.current = pathname === "/" ? "smooth" : "auto";
+    setIndexSection(id);
+    behaviorRef.current = "instant";
   };
 
   useEffect(() => {
-    if (pathname !== "/") return;
+    if (pathname !== "/" || indexSection === undefined) return;
 
     const section = document.getElementById(indexSection);
     section?.scrollIntoView({ behavior: behaviorRef.current });
+    setIndexSection(undefined);
   }, [indexSection, pathname]);
 
   // ----- Mobile drawer state -----
   const [open, setOpen] = useState(false);
+
+  // ----- Intersection -----
+  const topPx = useTopOffsetPx();
+  const activeId = useActiveSection(
+    navItems.map((navId) => navId.toLowerCase()),
+    topPx,
+  );
 
   return (
     <div className="z-50 fixed top-0 w-full py-0 border-b border-grey bg-dark h-[var(--nav-h)]">
@@ -45,18 +57,21 @@ export const Navbar = () => {
           <div className="hidden md:flex items-center gap-8 w-full justify-center">
             {navItems.map((item) => {
               const id = item.toLowerCase() as SectionId;
-              const active = indexSection === id && pathname === "/";
+              const isActive = pathname === "/" && id === activeId;
               return (
                 <button
                   key={item}
-                  onClick={() => scrollToSection(item)}
-                  className="
-                    relative cursor-pointer 
-                    after:content-[''] after:absolute after:left-0 after:bottom-0 
-                    after:w-0 after:h-[2px] after:bg-accent after:transition-all after:duration-300 
-                    hover:after:w-full
-                  "
-                  aria-current={active ? "page" : undefined}
+                  onClick={() => scrollToSection(id)}
+                  className={classNames(
+                    "relative cursor-pointer px-1.5 py-1 outline-offset-2",
+                    // underline base
+                    "after:content-[''] after:absolute after:left-0 after:-bottom-0.5",
+                    "after:h-[2px] after:bg-accent after:transition-[width] after:duration-300",
+                    "motion-reduce:after:transition-none",
+                    // active vs hover
+                    isActive ? "after:w-full" : "after:w-0 hover:after:w-full",
+                  )}
+                  aria-current={isActive ? "page" : undefined}
                 >
                   {item}
                 </button>
@@ -132,7 +147,7 @@ export const Navbar = () => {
               <button
                 key={item}
                 onClick={() => {
-                  scrollToSection(item);
+                  scrollToSection(id);
                   setOpen(false); // close drawer if it’s open
                 }}
                 className={classNames("text-left rounded-xl px-4 py-4 text-lg")}

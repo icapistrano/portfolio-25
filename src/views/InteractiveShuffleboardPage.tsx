@@ -2,8 +2,12 @@ import { FC, useEffect, useMemo } from "react";
 import { IconSparkles } from "@tabler/icons-react";
 import { ProjectContent, SectionItem } from "../components/ProjectContent";
 import towerStackVideo from "../assets/images/interactiveShuffleboard/towerstack.mp4";
+import towerStackPoster from "../assets/images/interactiveShuffleboard/towerstack-poster.jpg";
 import fieldRaidVideo from "../assets/images/interactiveShuffleboard/fieldraid.mp4";
+import fieldRaidPoster from "../assets/images/interactiveShuffleboard/fieldraid-poster.jpg";
 import planetOdysseyVideo from "../assets/images/interactiveShuffleboard/planetodyssey.mp4";
+import planetOdysseyPoster from "../assets/images/interactiveShuffleboard/planetodyssey-poster.jpg";
+import { ContactSection } from "./ContactSection";
 
 const Overview: FC = () => {
   const events = [
@@ -120,6 +124,7 @@ const GameModes: FC = () => {
         valid throw fills the block corresponding to the band where the puck
         stops. After all throws, the team with the most coloured blocks wins.`,
       video: towerStackVideo,
+      poster: towerStackPoster,
       caption:
         "Real-time gameplay of TowerStack with puck-localisation overlays (demo only).",
     },
@@ -129,9 +134,10 @@ const GameModes: FC = () => {
         The table is split into a grid of cells used to measure territory. Each
         valid throw claims nearby cells by nearest-distance assignment; those
         cells are coloured for its team. After all throws, the team with the
-        highest percentage of coloured cells wins..
+        highest percentage of coloured cells wins.
       `,
       video: fieldRaidVideo,
+      poster: fieldRaidPoster,
       caption:
         "Real-time gameplay of Field Raid with puck-localisation overlays (demo only).",
     },
@@ -143,6 +149,7 @@ const GameModes: FC = () => {
         closest puck to the target wins.
       `,
       video: planetOdysseyVideo,
+      poster: planetOdysseyPoster,
       caption:
         "Real-time gameplay of Planet Odyssey with puck-localisation overlays (demo only).",
     },
@@ -161,6 +168,7 @@ const GameModes: FC = () => {
                 controls
                 playsInline
                 preload="metadata"
+                poster={gameMode.poster}
               />
             </div>
             <figcaption className="text-sm opacity-80 mt-2">
@@ -198,5 +206,10 @@ export const InteractiveShuffleboardPage = () => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, []);
 
-  return <ProjectContent sections={sectionItems} />;
+  return (
+    <>
+      <ProjectContent sections={sectionItems} />
+      <ContactSection />
+    </>
+  );
 };
