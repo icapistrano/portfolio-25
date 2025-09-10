@@ -16,22 +16,6 @@ export default {
         bebas: ["Bebas Neue"],
         anton: ["Anton"],
       },
-      keyframes: {
-        // uses CSS variables for direction & zoom so you can control it per-card
-        kenburns: {
-          "0%": {
-            transform:
-              "translate(var(--kb-x-start, 0), var(--kb-y-start, 0)) scale(var(--kb-scale-start, 1))",
-          },
-          "100%": {
-            transform:
-              "translate(var(--kb-x-end, 0), var(--kb-y-end, 0)) scale(var(--kb-scale-end, 1.15))",
-          },
-        },
-      },
-      animation: {
-        kenburns: "kenburns 12s ease-in-out forwards",
-      },
     },
   },
   plugins: [],
