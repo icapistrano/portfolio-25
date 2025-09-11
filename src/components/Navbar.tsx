@@ -166,7 +166,7 @@ export const Navbar = () => {
 const ResumeButton = () => (
   <Button>
     <a
-      href="https://drive.google.com/file/d/1hXImpzd1Hmwzdkdl9hGjtSmBh2dMmb2o/view"
+      href="https://drive.google.com/file/d/1C1QP9c0wWbk9ffiqu23Hk0z4YMOifXUb/view"
       target="_blank"
       rel="noopener noreferrer"
       className="flex flex-row gap-1 items-center py-1 px-3"
