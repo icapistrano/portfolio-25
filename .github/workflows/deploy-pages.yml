@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy Portfolio
 
 on:
   push:
@@ -18,25 +18,38 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # 1. Checkout repository
       - uses: actions/checkout@v4
 
+      # 2. Setup Node
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
+      # 3. Install dependencies
       - run: npm ci
-      - run: npm run build # Vite outputs to dist/ by default
 
-      # Add your custom domain to the published output:
+      # 4. Build portfolio root
+      - name: Build portfolio
+        run: npm run build
+
+      # 5. Copy Valentine build into dist/projects/valentine
+      - name: Copy Valentine build
+        run: |
+          mkdir -p dist/projects/valentine
+          cp -r projects/valentine/* dist/projects/valentine/
+
+      # 6. Custom domain
       - run: echo "icapistrano.com" > dist/CNAME
 
-      # SPA routing fix: serve index.html for client routes on GitHub Pages
+      # 7. SPA fix
       - run: cp dist/index.html dist/404.html
 
-      # (Optional) Disable Jekyll processing just in case
+      # 8. Disable Jekyll
       - run: touch dist/.nojekyll
 
+      # 9. Upload artifact
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
