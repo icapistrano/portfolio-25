@@ -17,6 +17,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       # 1. Checkout repository
       - uses: actions/checkout@v4
@@ -30,26 +31,33 @@ jobs:
       # 3. Install dependencies
       - run: npm ci
 
-      # 4. Build portfolio root
+      # 4. Build the main portfolio
       - name: Build portfolio
         run: npm run build
 
-      # 5. Copy Valentine build into dist/projects/valentine
-      - name: Copy Valentine build
+      # 5. Automatically copy all projects in /projects into dist/projects
+      - name: Copy all project builds
         run: |
-          mkdir -p dist/projects/valentine
-          cp -r projects/valentine/* dist/projects/valentine/
+          mkdir -p dist/projects
+          for dir in projects/*/; do
+            echo "Copying $dir ..."
+            mkdir -p "dist/$dir"
+            cp -r "$dir"* "dist/$dir"
+          done
 
-      # 6. Custom domain
-      - run: echo "icapistrano.com" > dist/CNAME
+      # 6. Add custom domain (CNAME)
+      - name: Add custom domain
+        run: echo "icapistrano.com" > dist/CNAME
 
-      # 7. SPA fix
-      - run: cp dist/index.html dist/404.html
+      # 7. Fix SPA routing for GitHub Pages
+      - name: Add 404.html fallback
+        run: cp dist/index.html dist/404.html
 
       # 8. Disable Jekyll
-      - run: touch dist/.nojekyll
+      - name: Disable Jekyll
+        run: touch dist/.nojekyll
 
-      # 9. Upload artifact
+      # 9. Upload the build artifact
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
