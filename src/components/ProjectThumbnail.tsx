@@ -11,7 +11,16 @@ export const ProjectThumbnail: FC<{
   buttonText?: string;
   desc?: string;
   techStack?: string[];
-}> = ({ image, title, url, buttonText, desc, techStack }) => {
+  isExternal?: boolean;
+}> = ({
+  image,
+  title,
+  url,
+  buttonText,
+  desc,
+  techStack,
+  isExternal = false,
+}) => {
   const navigate = useNavigate();
 
   return (
@@ -44,11 +53,37 @@ export const ProjectThumbnail: FC<{
             </ul>
           )}
 
-          <Button onClick={() => navigate(url)} isDisabled={url.length <= 0}>
+          {/* <Button onClick={() => navigate(url)} isDisabled={url.length <= 0}>
             <div className="flex flex-row gap-1 items-center py-1 px-3">
               {buttonText && <h3 className="text-sm truncate">{buttonText}</h3>}
               <IconArrowRight size={18} />
             </div>
+          </Button> */}
+
+          <Button
+            onClick={!isExternal ? () => navigate(url) : undefined}
+            isDisabled={url.length <= 0}
+          >
+            {isExternal ? (
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-row gap-1 items-center py-1 px-3"
+              >
+                {buttonText && (
+                  <h3 className="text-sm truncate">{buttonText}</h3>
+                )}
+                <IconArrowRight size={18} />
+              </a>
+            ) : (
+              <div className="flex flex-row gap-1 items-center py-1 px-3">
+                {buttonText && (
+                  <h3 className="text-sm truncate">{buttonText}</h3>
+                )}
+                <IconArrowRight size={18} />
+              </div>
+            )}
           </Button>
         </div>
       </div>

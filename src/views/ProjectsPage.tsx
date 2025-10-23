@@ -27,29 +27,31 @@ export const ProjectsPage = () => {
           <ProjectThumbnail
             title="Interactive Shuffleboard"
             image={shuffleboard}
-            url="interactive-shuffleboard"
+            url="interactive-shuffleboard/"
             buttonText="View work"
           />
 
           <ProjectThumbnail
             title="Robotic Air-hockey System"
             image={robotAirhockey}
-            url="robot-air-hockey"
+            url="robot-air-hockey/"
             buttonText="View work"
           />
 
           <ProjectThumbnail
             title="Holographic Robot"
             image={holographicRobot}
-            url="holographic-robot"
+            url="https://icapistrano.com/projects/holographic-robot"
             buttonText="View demo"
+            isExternal
           />
 
           <ProjectThumbnail
             title="Valentine Letter"
             image={valentine}
-            url="valentine"
+            url="https://icapistrano.com/projects/valentine"
             buttonText="View demo"
+            isExternal
           />
         </div>
       </Container>
