@@ -16,8 +16,8 @@ export const Container: FC<Props> = ({
   return (
     <section
       className={classNames(
-        "container mx-auto px-4 pb-20",
-        withNavOffset && "pt-[var(--nav-h)] min-h-[calc(100dvh-var(--nav-h))]",
+        "container mx-auto px-1 md:px-4 pb-20",
+        withNavOffset && "pt-[var(--nav-h)]",
         className,
       )}
       {...rest}

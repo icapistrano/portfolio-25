@@ -4,6 +4,7 @@ import { PageSideborder } from "./components/PageSideborder";
 import { IndexPage } from "./views/IndexPage";
 import { InteractiveShuffleboardPage } from "./views/InteractiveShuffleboardPage";
 import { RobotAirHockeyPage } from "./views/RobotAirHockeyPage";
+import { ProjectsPage } from "./views/ProjectsPage";
 
 const AppLayout = () => {
   return (
@@ -20,6 +21,7 @@ function App() {
     <Routes>
       <Route element={<AppLayout />}>
         <Route index element={<IndexPage />} />
+        <Route path="/projects" element={<ProjectsPage />} />
         <Route
           path="/projects/interactive-shuffleboard"
           element={<InteractiveShuffleboardPage />}

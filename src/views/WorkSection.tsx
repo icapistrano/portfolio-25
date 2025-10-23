@@ -1,10 +1,11 @@
+import classNames from "classnames";
 import flowerPlotter from "../assets/images/flowerPlotter.gif";
 import shuffleboard from "../assets/images/shuffleboard.jpg";
 import robotAirhockey from "../assets/images/robotAirHockey.gif";
 import { Container } from "../components/Container";
 import { TimelineWithWaypoints } from "../components/Timeline";
-import classNames from "classnames";
 import { ProjectThumbnail } from "../components/ProjectThumbnail";
+import { TextWithAccent } from "../components/TextWithAccent";
 
 export const WorkSection = () => {
   // waypoint pos between 0 to 1
@@ -18,6 +19,7 @@ export const WorkSection = () => {
       desc: "Modern shuffleboard with real-time tracking, auto scoring, and interactive 3D visuals",
       tags: ["Three.js", "Electron", "OpenCV"],
       link: "projects/interactive-shuffleboard",
+      buttonText: "View work",
     },
     {
       id: "Robotic Air-hockey System",
@@ -28,16 +30,16 @@ export const WorkSection = () => {
       desc: "ROS-controlled robot that plays against humans using vision and predictive tracking",
       tags: ["ROS", "OpenCV", "Python"],
       link: "projects/robot-air-hockey",
+      buttonText: "View work",
     },
     {
-      id: "Robotic Flower Plotter",
+      id: "Curated projects",
       pos: 0.835,
       side: "left" as const,
-      title: "Robotic Flower Plotter",
+      title: "A curated collection of my work",
       image: flowerPlotter,
-      desc: "Robot plots flower patterns using polar coordinates and inverse kinematics",
-      tags: ["RAPID", "Python"],
-      link: "",
+      link: "projects",
+      buttonText: "View works",
     },
   ];
 
@@ -47,13 +49,12 @@ export const WorkSection = () => {
       className="relative border-t border-grey border-dashed mb-16 md:mb-20"
     >
       <div className="pt-[var(--cushion)]">
-        {/* Responsive heading: same style, scaled down on mobile */}
-        <h2 className="text-center font-primary text-4xl sm:text-5xl md:text-6xl leading-tight">
-          <span className="font-accent align-baseline text-6xl sm:text-7xl md:text-9xl mr-1">
-            W
-          </span>
-          ork
-        </h2>
+        <TextWithAccent
+          name="Work"
+          accentIndex={0}
+          textSizes="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
+          accentPadding="mr-2"
+        />
 
         <div className="relative w-full flex flex-col">
           {/* Timeline overlaid only on md+ to avoid clutter on phones */}
@@ -81,8 +82,8 @@ export const WorkSection = () => {
                   techStack={wp.tags}
                   image={wp.image}
                   desc={wp.desc}
-                  isActive={true}
                   url={wp.link}
+                  buttonText={wp.buttonText}
                 />
               </div>
             </div>
