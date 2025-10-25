@@ -1,14 +1,17 @@
-attribute float scale;
-attribute vec3 color;
+attribute float attraction;
 
-uniform float maxSize;
+uniform vec3 uColor;
+uniform float uMaxSize;
+uniform float uMinSize;
 
 varying vec3 vColor;
 
 void main() {
   vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
   gl_Position = projectionMatrix * mvPosition;
-  gl_PointSize = scale / -mvPosition.z;
+
+  float size = mix(uMinSize, uMaxSize, attraction);
+  gl_PointSize = size / -mvPosition.z;
   
-  vColor = mix(vec3(1.0), color, scale / maxSize);
+  vColor = mix(vec3(1.0), uColor, attraction);
 }

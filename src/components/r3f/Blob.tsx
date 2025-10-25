@@ -1,21 +1,19 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { FunctionComponent, useMemo, useRef } from "react";
-import { AdditiveBlending, Points, ShaderMaterial, Vector3 } from "three";
-import { MouseHandler } from "./MouseHandler";
-import vertexShader from "./shaders/hero/vertex.glsl";
-import fragmentShader from "./shaders/hero/fragment.glsl";
 import { PerspectiveCamera } from "@react-three/drei";
+import { FC, useMemo, useRef } from "react";
+import { AdditiveBlending, Points, Uniform, Vector3 } from "three";
+import fragmentShader from "./shaders/hero/fragment.glsl";
+import vertexShader from "./shaders/hero/vertex.glsl";
+import { MouseHandler } from "./MouseHandler";
 
 type Particle = {
+  attractTime: number;
   originalPosition: Vector3;
   position: Vector3;
   velocity: Vector3;
-  scale: number;
-  color: Vector3;
-  attractTime: number;
 };
 
-export const BlobNoiseScene: FunctionComponent = () => {
+export const BlobNoiseScene: FC = () => {
   const mousePositionRef = useRef<Vector3>(new Vector3());
 
   return (
@@ -27,39 +25,30 @@ export const BlobNoiseScene: FunctionComponent = () => {
   );
 };
 
-const Particles: FunctionComponent<{
+const Particles: FC<{
   mousePos: Vector3;
   distanceThreshold?: number;
   sphereRad?: number;
   minSize?: number;
   maxSize?: number;
   particleCount?: number;
+  attractionStrength?: number;
+  damping?: number;
 }> = ({
   mousePos,
   distanceThreshold = 5,
   sphereRad = 3,
-  minSize = 20,
-  maxSize = 200,
+  minSize = 30,
+  maxSize = 100,
   particleCount = 500,
+  attractionStrength = 20,
+  damping = 0.98,
 }) => {
-  const EPS2 = 1e-6;
-  const ATTR_SPEED = 0.5; // higher = faster pull toward mouse
-
-  const RETURN_STIFF = 0.05; // spring stiffness back to origin
-  const RETURN_DAMP = 3; // damping opposing velocity (overdamped-ish)
-
-  const TIME_TO_MAX_SCALE = 0.5; // seconds required near mouse before allowing max size
-  const CLOSE_FRAC = 0.5; // % of particles that are attracted 0 - 1
-  const SCALE_EASE = 0.5; // how fast scale eases toward its target
-
-  const dirRef = useRef(new Vector3());
-
   const particleRef = useRef<Points>(null);
-  const materialRef = useRef<ShaderMaterial>(null);
-
   const positionRef = useRef(new Float32Array(particleCount * 3));
-  const colorRef = useRef(new Float32Array(particleCount * 3));
-  const scaleRef = useRef(new Float32Array(particleCount));
+  const attractionRef = useRef(new Float32Array(particleCount));
+
+  const tmpV = useRef(new Vector3());
 
   const particles = useMemo(() => {
     const goldenAngle = Math.PI * (3 - Math.sqrt(5));
@@ -74,71 +63,54 @@ const Particles: FunctionComponent<{
         originalPosition: new Vector3(x, y, z),
         position: new Vector3(x, y, z),
         velocity: new Vector3(),
-        scale: minSize,
-        color: new Vector3(0.0, 0.4, 1.0),
         attractTime: 0,
       };
     });
-  }, [particleCount, sphereRad, minSize]);
+  }, [particleCount, sphereRad]);
 
-  const updateParticle = (particle: Particle, dt: number) => {
-    const mouseIsNonZero = mousePos.lengthSq() > EPS2; // NEW
+  const updateParticle = (
+    particle: Particle,
+    delta: number,
+    moveParticles: boolean,
+  ) => {
     const distance = particle.position.distanceTo(mousePos);
 
-    const isWithinThreshold = mouseIsNonZero && distance <= distanceThreshold; // NEW
-    const closeDist = distanceThreshold * CLOSE_FRAC; // NEW
-    const isClose = isWithinThreshold && distance <= closeDist;
+    // --- When inside mouse influence ---
+    if (moveParticles && distance < distanceThreshold) {
+      const force = tmpV.current
+        .subVectors(mousePos, particle.position)
+        .multiplyScalar(
+          attractionStrength * (1 - distance / distanceThreshold),
+        );
 
-    dirRef.current.set(0, 0, 0);
+      particle.velocity.add(force.multiplyScalar(delta));
 
-    if (isWithinThreshold) {
-      // Attract to mouse
-      dirRef.current.subVectors(mousePos, particle.position);
-      dirRef.current.normalize();
-      const strength = Math.max(0.2, 1 - distance / 3);
-      particle.velocity.addScaledVector(
-        dirRef.current,
-        strength * ATTR_SPEED * dt,
-      );
-    } else {
-      // Return to origin
-      dirRef.current.subVectors(particle.originalPosition, particle.position);
+      particle.attractTime = Math.min(particle.attractTime + delta, 1);
+    }
+    // --- Otherwise, spring back to original position ---
+    else {
+      const stiffness = 3 + Math.random() * 10;
 
-      particle.velocity.addScaledVector(dirRef.current, RETURN_STIFF * dt);
-      particle.velocity.addScaledVector(particle.velocity, -RETURN_DAMP * dt);
+      const springForce = tmpV.current
+        .subVectors(particle.originalPosition, particle.position)
+        .multiplyScalar(stiffness);
+
+      particle.velocity.add(springForce.multiplyScalar(delta));
+      particle.velocity.multiplyScalar(damping);
+
+      particle.attractTime = Math.max(particle.attractTime - delta, 0);
     }
 
-    // If there is effectively no restoring force and we’re at rest, kill residual drift
-    if (
-      !isWithinThreshold &&
-      particle.position.distanceToSquared(particle.originalPosition) < EPS2
-    ) {
-      particle.velocity.set(0, 0, 0);
-    }
-
-    particle.position.add(particle.velocity);
-
-    // accumulate time only when very close; decay otherwise
-    if (isClose) {
-      particle.attractTime = Math.min(
-        TIME_TO_MAX_SCALE,
-        particle.attractTime + dt,
-      );
-    } else {
-      particle.attractTime = Math.max(0, particle.attractTime - dt);
-    }
-
-    const readyForMax = particle.attractTime >= TIME_TO_MAX_SCALE && isClose;
-    const targetScale = readyForMax ? maxSize : minSize;
-    const k = 1 - Math.exp(-SCALE_EASE * dt);
-    particle.scale += (targetScale - particle.scale) * k;
+    // --- Apply velocity to position ---
+    particle.position.add(particle.velocity.clone().multiplyScalar(delta));
   };
 
   useFrame((_, delta) => {
     if (!particleRef.current) return;
 
+    const isNonZero = mousePos.lengthSq() >= 1e-6;
     particles.forEach((particle, i) => {
-      updateParticle(particle, delta);
+      updateParticle(particle, delta, isNonZero);
 
       // Update attributes
       const idx = i * 3;
@@ -146,18 +118,21 @@ const Particles: FunctionComponent<{
       positionRef.current[idx + 1] = particle.position.y;
       positionRef.current[idx + 2] = particle.position.z;
 
-      colorRef.current[idx] = particle.color.x;
-      colorRef.current[idx + 1] = particle.color.y;
-      colorRef.current[idx + 2] = particle.color.z;
-
-      scaleRef.current[i] = particle.scale;
+      attractionRef.current[i] = particle.attractTime;
     });
 
     const geometry = particleRef.current.geometry;
     geometry.attributes.position.needsUpdate = true;
-    geometry.attributes.color.needsUpdate = true;
-    geometry.attributes.scale.needsUpdate = true;
+    geometry.attributes.attraction.needsUpdate = true;
   });
+
+  const uniforms = useMemo(() => {
+    return {
+      uColor: new Uniform(new Vector3(0, 0.4, 1)),
+      uMaxSize: new Uniform(maxSize),
+      uMinSize: new Uniform(minSize),
+    };
+  }, [minSize, maxSize]);
 
   return (
     <points ref={particleRef}>
@@ -169,26 +144,17 @@ const Particles: FunctionComponent<{
           count={particleCount}
         />
         <bufferAttribute
-          attach="attributes-color"
-          array={colorRef.current}
-          itemSize={3}
-          count={particleCount}
-        />
-        <bufferAttribute
-          attach="attributes-scale"
-          array={scaleRef.current}
+          attach="attributes-attraction"
+          array={attractionRef.current}
           itemSize={1}
           count={particleCount}
         />
       </bufferGeometry>
       <shaderMaterial
-        ref={materialRef}
         fragmentShader={fragmentShader}
         vertexShader={vertexShader}
         blending={AdditiveBlending}
-        uniforms={{
-          maxSize: { value: maxSize },
-        }}
+        uniforms={uniforms}
       />
     </points>
   );
