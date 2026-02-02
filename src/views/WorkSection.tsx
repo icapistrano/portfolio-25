@@ -87,7 +87,7 @@ export const WorkSection = () => {
             >
               <div
                 className={classNames(
-                  "w-full md:w-1/2", // full width on mobile, half on desktop
+                  "w-full md:w-1/2 flex p-2", // full width on mobile, half on desktop
                   wp.side === "left" ? "md:pr-8" : "md:pl-8",
                 )}
               >
