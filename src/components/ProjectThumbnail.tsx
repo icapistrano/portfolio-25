@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 export const ProjectThumbnail: FC<{
   image: string;
   title: string;
-  url: string;
+  url?: string;
   buttonText?: string;
   desc?: string;
   techStack?: string[];
@@ -53,16 +53,9 @@ export const ProjectThumbnail: FC<{
             </ul>
           )}
 
-          {/* <Button onClick={() => navigate(url)} isDisabled={url.length <= 0}>
-            <div className="flex flex-row gap-1 items-center py-1 px-3">
-              {buttonText && <h3 className="text-sm truncate">{buttonText}</h3>}
-              <IconArrowRight size={18} />
-            </div>
-          </Button> */}
-
           <Button
-            onClick={!isExternal ? () => navigate(url) : undefined}
-            isDisabled={url.length <= 0}
+            onClick={!isExternal && url ? () => navigate(url) : undefined}
+            isDisabled={!Boolean(url)}
           >
             {isExternal ? (
               <a

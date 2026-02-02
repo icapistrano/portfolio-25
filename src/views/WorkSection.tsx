@@ -2,6 +2,7 @@ import classNames from "classnames";
 import flowerPlotter from "../assets/images/flowerPlotter.gif";
 import shuffleboard from "../assets/images/shuffleboard.jpg";
 import robotAirhockey from "../assets/images/robotAirHockey.gif";
+import oms from "../assets/images/oms.png";
 import { Container } from "../components/Container";
 import { TimelineWithWaypoints } from "../components/Timeline";
 import { ProjectThumbnail } from "../components/ProjectThumbnail";
@@ -11,8 +12,18 @@ export const WorkSection = () => {
   // waypoint pos between 0 to 1
   const waypoints = [
     {
+      id: "3D Mapping Tool",
+      pos: 0.15,
+      side: "right" as const,
+      title: "3D Mapping Tool",
+      image: oms,
+      desc: "A tool for annotating and visualising semantic map data",
+      tags: ["R3F", "MobX", "Typescript"],
+      buttonText: "Coming soon",
+    },
+    {
       id: "Interactive Shuffleboard",
-      pos: 0.165,
+      pos: 0.4,
       side: "left" as const,
       title: "Interactive Shuffleboard",
       image: shuffleboard,
@@ -23,7 +34,7 @@ export const WorkSection = () => {
     },
     {
       id: "Robotic Air-hockey System",
-      pos: 0.5,
+      pos: 0.65,
       side: "right" as const,
       title: "Robotic Air-hockey System",
       image: robotAirhockey,
@@ -34,7 +45,7 @@ export const WorkSection = () => {
     },
     {
       id: "Curated projects",
-      pos: 0.835,
+      pos: 0.88,
       side: "left" as const,
       title: "A curated collection of my work",
       image: flowerPlotter,
@@ -68,7 +79,10 @@ export const WorkSection = () => {
               className={classNames(
                 "w-full flex justify-center", // center on mobile
                 wp.side === "left" ? "md:justify-start" : "md:justify-end", // alternate on md+
-                idx === 0 || idx === waypoints.length - 1 ? "py-10" : "py-0",
+                {
+                  "pt-10": idx === 0,
+                  "pb-10": idx === waypoints.length - 1,
+                },
               )}
             >
               <div
